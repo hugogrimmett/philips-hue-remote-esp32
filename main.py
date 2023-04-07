@@ -4,9 +4,14 @@ import time
 def toggle(p):
    p.value(not p.value())
 
-pin = machine.Pin(2, machine.Pin.OUT)
-for x in range(8):
-    toggle(pin)
-    time.sleep_ms(500)
+pin_led = machine.Pin(2, machine.Pin.OUT)
+pin_switch = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
+#print(pin13.value())
+#for x in range(8):
+
+while (True):
+    print(pin_switch.value())
+    pin_led.value(pin_switch.value())
+    time.sleep_ms(10)
 
 
