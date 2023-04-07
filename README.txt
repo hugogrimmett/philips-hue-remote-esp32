@@ -72,6 +72,24 @@ https://github.com/mnkii/esp32-philips-hue-button/blob/master/README.md
 
 https://docs.micropython.org/en/latest/library/network.html
 Great ttorial on socket module: https://internalpointers.com/post/making-http-requests-sockets-python
+
+Alternatively, install urllib.urequest or urequests using mpremote
+
+import urequests
+r = urequests.request('GET','http://192.168.178.40/api/newdeveloper')
+
+r = urequests.request('POST','http://192.168.178.40/api','{"devicetype":"hue_remote#esp32"}')
+"success":{"username":"zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"}
+
+username = "zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"
+
+r = urequests.request('GET','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights')
+
+Turn light on:
+r = urequests.request('PUT','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights/1/state','{"on":true}')
+
+Sockets:
+
 import network
 import time
 import socket
