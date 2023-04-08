@@ -61,6 +61,8 @@ Github repo seems to work (https://github.com/micropython/webrepl)
 ampy website: https://www.digikey.com/en/maker/projects/micropython-basics-load-files-run-code/fb1fcedaf11e4547943abfdd8ad825ce
 ampy --port /dev/cu.usbserial-0001 --baud 115200 run test.py
 
+I've been using this to copy files across to esp32
+ampy --port /dev/cu.usbserial-0001 --baud 115200 put main.py
 
 ## 6. Phue
 https://github.com/studioimaginaire/phue/
@@ -81,12 +83,24 @@ r = urequests.request('GET','http://192.168.178.40/api/newdeveloper')
 r = urequests.request('POST','http://192.168.178.40/api','{"devicetype":"hue_remote#esp32"}')
 "success":{"username":"zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"}
 
-username = "zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"
+credentials = "zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"
 
 r = urequests.request('GET','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights')
 
 Turn light on:
 r = urequests.request('PUT','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights/1/state','{"on":true}')
+
+Turn it off:
+r = urequests.request('PUT','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights/1/state','{"on":false}')
+
+Get state
+r = urequests.request('GET','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights/1')
+
+r.json()["state"]["on"]
+
+
+
+Hue API reference: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
 Sockets:
 
