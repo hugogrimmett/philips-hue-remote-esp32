@@ -4,19 +4,17 @@ Experience rating: 3/5 stars
 
 
 Table of contents:
-    Init
-0. Set-up
-    Ways to access ESP32:
-1. screen
-2. rshell (python package)
-3. mpremote (python package)
-4. webrepl (github repo)
-5. ampy 
+1. Set-up
+2. screen
+3. rshell (python package)
+4. mpremote (python package)
+5. webrepl (github repo)
+6. ampy 
     Hue connection
-6. phue python repository
-7. esp32 philips hue button (using C++)
+7. phue python repository
+8. esp32 philips hue button (using C++)
 
-## 0. set-up
+## 1. set-up
 
 Using esptool.py from github repo (apparently can also use pip to install, but didn't work for me)
 
@@ -32,14 +30,14 @@ There are two files that run on startup: boot.py, followed by main.py
 Default boot.py:
 '# This file is executed on every boot (including wake-boot from deepsleep)\n#import esp\n#esp.osdebug(None)\n#import webrepl\n#webrepl.start()\n'
 
-## 1. screen
+## 2. screen
 ```screen /dev/cu.usbserial-0001 115200```
 
-## 2. rshell  
+## 3. rshell  
 ```pip3 install rshell```
 Didn't try yet
 
-## 3. mpremote
+## 4. mpremote
 ```pip3 install mpremote```
 
 This is the only way I could manage to install external packages (mip not available until micropython v1.20, and the latest esp32 version is 1.19)
@@ -48,7 +46,7 @@ To add packages from a host machine:
 ```mpremote connect port:/dev/cu.usbserial-0001 mip install aioble```
 
 
-## 4. webrepl
+## 5. webrepl
 On ESP32: 
 ```
 import webrepl_setup
@@ -60,7 +58,7 @@ Web interface never worked for me so far (https://micropython.org/webrepl)
 Github repo seems to work (https://github.com/micropython/webrepl)
 ~/code/thirdparty/webrepl git:master > ```python3 webrepl_cli.py 192.168.178.41```
 
-## 5. Ampy 
+## 6. Ampy 
 
 ```pip3 install adafruit-ampy```
 
@@ -70,14 +68,14 @@ ampy website: https://www.digikey.com/en/maker/projects/micropython-basics-load-
 I've been using this to copy files across to esp32
 ```ampy --port /dev/cu.usbserial-0001 --baud 115200 put main.py```
 
-## 6. Phue
+## 7. Phue
 https://github.com/studioimaginaire/phue/
 
-## 7. esp32-philips-hue-button
+## 8. esp32-philips-hue-button
 https://github.com/mnkii/esp32-philips-hue-button/blob/master/README.md
 
 
-## 8. Micropython commands to connect to Hue bridge and change lights/scenes
+## 9. Micropython commands to connect to Hue bridge and change lights/scenes
 
 Install urllib.urequest or urequests using mpremote:
 ``` mpremote connect port:/dev/cu.usbserial-0001 mip install urequests```
