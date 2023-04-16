@@ -2,6 +2,7 @@
 2023-04-07
 Experience rating: 3/5 stars
 
+
 Table of contents:
     Init
 0. Set-up
@@ -40,6 +41,7 @@ Didn't try yet
 
 ## 3. mpremote
 pip3 install mpremote
+
 This is the only way I could manage to install external packages (mip not available until micropython v1.20, and the latest esp32 version is 1.19)
 
 To add packages from a host machine:
@@ -58,6 +60,8 @@ Github repo seems to work (https://github.com/micropython/webrepl)
 
 ## 5. Ampy 
 
+pip3 install adafruit-ampy
+
 ampy website: https://www.digikey.com/en/maker/projects/micropython-basics-load-files-run-code/fb1fcedaf11e4547943abfdd8ad825ce
 ampy --port /dev/cu.usbserial-0001 --baud 115200 run test.py
 
@@ -71,14 +75,13 @@ https://github.com/studioimaginaire/phue/
 https://github.com/mnkii/esp32-philips-hue-button/blob/master/README.md
 
 
+## 8. Micropython commands to connect to Hue bridge and change lights/scenes
 
-https://docs.micropython.org/en/latest/library/network.html
-Great ttorial on socket module: https://internalpointers.com/post/making-http-requests-sockets-python
+Install urllib.urequest or urequests using mpremote:
+> mpremote connect port:/dev/cu.usbserial-0001 mip install urequests
 
-Alternatively, install urllib.urequest or urequests using mpremote
-
-import urequests
-r = urequests.request('GET','http://192.168.178.40/api/newdeveloper')
+> import urequests
+> r = urequests.request('GET','http://192.168.178.40/api/newdeveloper')
 
 r = urequests.request('POST','http://192.168.178.40/api','{"devicetype":"hue_remote#esp32"}')
 "success":{"username":"zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"}
@@ -102,44 +105,3 @@ r.json()["state"]["on"]
 
 Hue API reference: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
-Sockets:
-
-import network
-import time
-import socket
-
-# Port is always 80 because it's an http protocol
-port = 80
-host = '192.168.178.40'
-request = b"GET / HTTP/1.1\r\nHost:192.168.178.40/api/newdeveloper\r\n\r\n"
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host,port))
-send_data(s, request)
-response = receive_data(s)
-s.close()
-print(response.decode())
-
-def send_data(socket, request):
-    # note: could replace this all with sendall()
-    sent    = 0
-    while sent < len(request):
-        sent = sent + s.send(request[sent:])    # Send a portion of 'request', starting from 'sent' byte
-
-def receive_data(socket):
-    chunk_length = 4096
-    chunk = socket.recv(chunk_length)
-    message_length = get_message_length_from_html_header(chunk)
-    response = b""
-    if message_length < chunk_length:
-        return chunk
-    else:
-        remainder = socket.recv(message_length - chunk_length)
-        return chunk + remainder
-
-def get_message_length_from_html_header(html):
-    header_length = len(html.decode().split("\r\n\r\n")[0])+8 # 8 for the \r\n\r\n characters -- but should it be +4 instead? messages seem to be 4 characters shorter than reported
-    parts = html.decode().split("\r\n")
-    for part in parts:
-        if "Content-Length" in part:
-            return int(part.split(": ")[1])+ header_length
-    return 0
