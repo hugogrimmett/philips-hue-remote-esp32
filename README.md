@@ -78,10 +78,11 @@ https://github.com/mnkii/esp32-philips-hue-button/blob/master/README.md
 ## 8. Micropython commands to connect to Hue bridge and change lights/scenes
 
 Install urllib.urequest or urequests using mpremote:
-> mpremote connect port:/dev/cu.usbserial-0001 mip install urequests
+``` mpremote connect port:/dev/cu.usbserial-0001 mip install urequests```
 
-> import urequests
-> r = urequests.request('GET','http://192.168.178.40/api/newdeveloper')
+```
+import urequests
+r = urequests.request('GET','http://192.168.178.40/api/newdeveloper')
 
 r = urequests.request('POST','http://192.168.178.40/api','{"devicetype":"hue_remote#esp32"}')
 "success":{"username":"zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"}
@@ -100,7 +101,7 @@ Get state
 r = urequests.request('GET','http://192.168.178.40/api/zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n/lights/1')
 
 r.json()["state"]["on"]
-
+```
 
 
 Hue API reference: https://developers.meethue.com/develop/hue-api-v2/api-reference/
