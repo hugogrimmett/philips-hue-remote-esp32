@@ -16,14 +16,19 @@ Table of contents:
 
 ## 1. set-up
 
+
 Using esptool.py from github repo (apparently can also use pip to install, but didn't work for me)
 
 Used tutorial from
 https://dev.to/tomoyk/esp32-setup-guide-with-macos-m1-mac-2j1c
 
+Discover ESP32 with ```esptool.py flash_id```
+
 ~/code/thirdparty/esptool git:master > ```python3 esptool.py --chip esp32 --port /dev/cu.usbserial-0001 erase_flash```
 
 ~/code/thirdparty/esptool git:master > ```python3 esptool.py --chip esp32 --port /dev/cu.usbserial-0001 --baud 460800 write_flash -z 0x1000 ~/Downloads/esp32-20220618-v1.19.1.bin```
+
+Micropython ESP32 documentation: https://docs.micropython.org/en/latest/esp32/tutorial/intro.html
 
 There are two files that run on startup: boot.py, followed by main.py
 
