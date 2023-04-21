@@ -118,29 +118,45 @@ print('Connected to bridge!')
 
 pin_led = machine.Pin(2, machine.Pin.OUT)
 pin_switch = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
+pin_button1 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
+pin_button2 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+pin_button3 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
+pin_button4 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
+pin_button5 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
+pin_button6 = machine.Pin(33, machine.Pin.IN, machine.Pin.PULL_DOWN)
+
+
 r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
 light_state = r.json()["state"]["on"]
 r.close()
 
 print('Scanning for button presses...')
 while True:
-    first = pin_switch.value()
+    # first = pin_switch.value()
+    # time.sleep_ms(10)
+    # second = pin_switch.value()
+    first_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
     time.sleep_ms(10)
-    second = pin_switch.value()
-    if second and not first:
-        print('Button pressed!')
-    elif first and not second:
-        print('Button released!')
-        # for _ in range(2):
-        #     pin_led = 1
-        #     time.sleep_ms(100)
-        #     pin_led = 0
-        #     time.sleep_ms(100)
-        r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
-        light_state = r.json()["state"]["on"]
-        r.close()
-        print('   light state was %s...' % light_state)
-        r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":%s}' % str(not light_state).lower())
-        print('   ... switching to %s' % (not light_state))
-        r.close()
+    second_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
+    button_id = 0;
+    for first, second in zip(first_values, second_values):
+        button_id += 1
+
+        if second and not first:
+            print('Button ' + str(button_id) + ' pressed!')
+        elif first and not second:
+            print('Button ' + str(button_id) + ' released!')
+            # for _ in range(2):
+            #     pin_led = 1
+            #     time.sleep_ms(100)
+            #     pin_led = 0
+            #     time.sleep_ms(100)
+
+            # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
+            # light_state = r.json()["state"]["on"]
+            # r.close()
+            # print('   light state was %s...' % light_state)
+            # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":%s}' % str(not light_state).lower())
+            # print('   ... switching to %s' % (not light_state))
+            # r.close()
             
