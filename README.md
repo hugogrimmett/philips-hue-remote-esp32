@@ -1,3 +1,5 @@
+# Philips Hue remote using ESP32
+
 This project allows you to use an ESP32 microcontroller to send messages to a Hue bridge, to change various home automation light settings. I have it configured with six push switches, each corresponding to a particular scene change.
 
 The code is written in micropython. I download my code to the ESP32 using ampy, use mpremote to download external libraries, and use Screen to run python commands remotely on the microcontroller.
