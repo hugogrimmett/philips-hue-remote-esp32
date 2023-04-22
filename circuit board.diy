@@ -18,10 +18,10 @@
       <value></value>
       <controlPoints>
         <point x="4.8" y="3.7"/>
-        <point x="6.4" y="4.9"/>
+        <point x="6.4" y="4.8"/>
       </controlPoints>
       <firstPoint x="4.8" y="3.7"/>
-      <secondPoint x="6.4" y="4.9"/>
+      <secondPoint x="6.4" y="4.8"/>
       <boardColor hex="f8ebb3"/>
       <borderColor hex="ada47d"/>
       <coordinateColor hex="b6b6b6"/>
@@ -87,15 +87,15 @@
       <cutBetweenHoles>false</cutBetweenHoles>
       <orientation>VERTICAL</orientation>
       <holeSpacing value="0.1" unit="in"/>
-      <point x="5.4" y="4.6"/>
+      <point x="5.3" y="4.6"/>
     </diylc.connectivity.TraceCut>
     <diylc.connectivity.Jumper>
       <name>J1</name>
       <alpha>127</alpha>
       <points>
-        <point x="5.5" y="3.8"/>
-        <point x="5.5" y="3.9"/>
-        <point x="5.5" y="3.85"/>
+        <point x="5.8" y="3.8"/>
+        <point x="5.8" y="3.9"/>
+        <point x="5.8" y="3.85"/>
       </points>
       <bodyColor hex="ffffff"/>
       <borderColor hex="000000"/>
@@ -112,9 +112,9 @@
       <name>J2</name>
       <alpha>127</alpha>
       <points>
-        <point x="5.9" y="3.8"/>
-        <point x="5.9" y="4.0"/>
-        <point x="5.9" y="3.9"/>
+        <point x="6.3" y="3.8"/>
+        <point x="6.3" y="4.0"/>
+        <point x="6.3" y="3.9"/>
       </points>
       <bodyColor hex="ffffff"/>
       <borderColor hex="000000"/>
@@ -194,9 +194,9 @@
       <name>J4</name>
       <alpha>127</alpha>
       <points>
-        <point x="6.1" y="3.8"/>
-        <point x="6.1" y="4.6"/>
-        <point x="6.1" y="4.2"/>
+        <point x="5.4" y="3.8"/>
+        <point x="5.4" y="4.6"/>
+        <point x="5.4" y="4.2"/>
       </points>
       <bodyColor hex="ffffff"/>
       <borderColor hex="000000"/>
@@ -213,9 +213,9 @@
       <name>J5</name>
       <alpha>127</alpha>
       <points>
-        <point x="5.3" y="3.8"/>
-        <point x="5.3" y="4.7"/>
-        <point x="5.3" y="4.25"/>
+        <point x="5.0" y="3.8"/>
+        <point x="5.0" y="4.7"/>
+        <point x="5.0" y="4.25"/>
       </points>
       <bodyColor hex="ffffff"/>
       <borderColor hex="000000"/>
@@ -334,9 +334,9 @@
       <alpha>127</alpha>
       <orientation>DEFAULT</orientation>
       <controlPoints>
-        <point x="6.3" y="4.3"/>
-        <point x="6.3" y="4.4"/>
-        <point x="6.3" y="4.5"/>
+        <point x="6.0" y="4.3"/>
+        <point x="6.0" y="4.4"/>
+        <point x="6.0" y="4.5"/>
       </controlPoints>
       <rowCount>1</rowCount>
       <columnCount>3</columnCount>
