@@ -2,28 +2,85 @@ import machine
 import time
 import urequests
 import os
+import sys
 
-# hue_bridge_ip_address = '192.168.178.96' # wenckebachstr 2
+def main():
+    saved_info_file_name = 'hue_ip_credentials.txt'
+    light_index = 1
+    try:
+        hue_bridge_ip_address, device_name, credentials = get_ip_device_credentials(saved_info_file_name)
+    except Exception:
+        print('ERROR: could not get one or more of Hue bridge IP address, device name, or credentials') 
+        sys.exit()
+    print('Connected to bridge!')
 
+    pin_led = machine.Pin(2, machine.Pin.OUT)
+    pin_switch = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button1 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button2 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button3 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button4 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button5 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button6 = machine.Pin(33, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
-# credentials = "zuMLxhoETtzzWnIjlQidaQx-IXLkKsBTaEOaUM9n"
-# light_index = 1
+    room = 'office'
+    group_id = 1
+    scene_button1 = 'aoYhBTLiGLJYEYy'
+    scene_button2 = 'fFTqOx3xZFwSjvu'
+    scene_button3 = 'A6SMSLSLbYPL0pj'
+    scene_button4 = '9nmL2oMZ0MWEstw'
+    scene_button5 = 'sK2PYzdtkWIzklc'
+    scene_button6 = 'jW--LK2MtUzKJ-B'
 
+    scenes = ['aoYhBTLiGLJYEYy', 'fFTqOx3xZFwSjvu', 'A6SMSLSLbYPL0pj', '9nmL2oMZ0MWEstw', 'sK2PYzdtkWIzklc', 'jW--LK2MtUzKJ-B']
+    # button_to_scene = {}
+    # for k in range(6):
+    #     button_to_scene[k] = 
+    
+    # call: aoYhBTLiGLJYEYy
+    # solo work - daytime: fFTqOx3xZFwSjvu 
+    # night: A6SMSLSLbYPL0pj
+    # movie: 9nmL2oMZ0MWEstw
+    # techno: sK2PYzdtkWIzklc
+    # reading: jW--LK2MtUzKJ-B
 
-# turn light on
-# r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":true}')
-# turn light off
-# r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":false}')
+    # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
+    # light_state = r.json()["state"]["on"]
+    # r.close()
 
+    print('Scanning for button presses...')
+    while True:
+        # first = pin_switch.value()
+        # time.sleep_ms(10)
+        # second = pin_switch.value()
+        first_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
+        time.sleep_ms(10)
+        second_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
+        button_id = 0;
+        for first, second in zip(first_values, second_values):
+            if second and not first:
+                print('Button ' + str(button_id) + ' pressed!')
+            elif first and not second:
+                print('Button ' + str(button_id) + ' released!') 
+                activate_scene(hue_bridge_ip_address, credentials, group_id, scenes[button_id])
+            button_id += 1
+                # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
+                # light_state = r.json()["state"]["on"]
+                # r.close()
+                # print('   light state was %s...' % light_state)
+                # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":%s}' % str(not light_state).lower())
+                # print('   ... switching to %s' % (not light_state))
+                # r.close()
 
-# print(pin13.value())
-# for x in range(8):
-
-# while (True):
-#    print(pin_switch.value())
-#    print('Checking switch value and matching LED status to it... ctrl+C to interrupt.')
-#    pin_led.value(pin_switch.value())
-#    time.sleep_ms(10)
+def activate_scene(hue_bridge_ip_address, credentials, group_id, scene_id, transition_time=4):
+    # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"scene":"' + scene_id + '", "transitiontime": "' + str(transition_time) + '"}')
+    r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"scene":"' + scene_id + '"}')
+    # return self.request('PUT', '/api/' + self.username + '/groups/' +
+    #                     str(group_id) + '/action',
+    #                     {
+    #                         "scene": scene_id,
+    #                         "transitiontime": transition_time
+    #                     })
 
 def get_ip_device_credentials(saved_info_file_name):
     dir_contents = os.listdir()
@@ -39,16 +96,16 @@ def get_ip_device_credentials(saved_info_file_name):
         credentials = d[2].strip()
         if not test_hue_bridge_connection(hue_bridge_ip_address):
             print("ERROR: could not locate Hue bridge at the address: " + hue_bridge_ip_address)
-            return False
-        if not test_credentials(hue_bridge_ip_address, credentials):
-            print("ERROR: credentials invalid: " + credentials)
-            return False
+            raise Exception
+        # if not test_credentials(hue_bridge_ip_address, credentials):
+        #     print("ERROR: credentials invalid: " + credentials)
+        #     raise Exception
     else:
         print('No credentials stored')
         hue_bridge_ip_address = input('Hue bridge IP address (e.g. 192.168.178.96): ')
         if not test_hue_bridge_connection(hue_bridge_ip_address):
             print("ERROR: could not locate Hue bridge at the address: " + hue_bridge_ip_address)
-            return False
+            raise Exception
         device_name = input('Choose a device name for your ESP32: ')
         credentials = get_new_credentials(device_name, hue_bridge_ip_address)
         print('Saving new credentials to ' + saved_info_file_name + 'to connect automatically upon future reboots. Delete this file to reset stored credentials.')
@@ -80,8 +137,13 @@ def get_new_credentials(device_name, hue_bridge_ip_address):
     return credentials
 
 def test_credentials(hue_bridge_ip_address, credentials):
+    print(hue_bridge_ip_address)
+    print(credentials)
+    print('http://' + hue_bridge_ip_address + '/api/'+ credentials)
     r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/'+ credentials)
+    print('JSON contains: \n' + r.json())
     try:
+        print('JSON contains: \n' + r.json())
         r.json()[0]["error"]["description"]
         r.close()
     except KeyError:
@@ -107,56 +169,23 @@ def test_hue_bridge_connection(hue_bridge_ip_address):
     print('   ...bridge connection passes')
     return True
 
-saved_info_file_name = 'hue_ip_credentials.txt'
-light_index = 1
-hue_bridge_ip_address, device_name, credentials = get_ip_device_credentials(saved_info_file_name)
-print('Connected to bridge!')
-# # flash the light on and off
-# r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":true}')
-# time.sleep_ms(1000)
-# r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":false}')
-
-pin_led = machine.Pin(2, machine.Pin.OUT)
-pin_switch = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
-pin_button1 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
-pin_button2 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
-pin_button3 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
-pin_button4 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
-pin_button5 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
-pin_button6 = machine.Pin(33, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
 
-r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
-light_state = r.json()["state"]["on"]
-r.close()
+if __name__ == "__main__":
+    main()
 
-print('Scanning for button presses...')
-while True:
-    # first = pin_switch.value()
-    # time.sleep_ms(10)
-    # second = pin_switch.value()
-    first_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
-    time.sleep_ms(10)
-    second_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
-    button_id = 0;
-    for first, second in zip(first_values, second_values):
-        button_id += 1
 
-        if second and not first:
-            print('Button ' + str(button_id) + ' pressed!')
-        elif first and not second:
-            print('Button ' + str(button_id) + ' released!')
-            # for _ in range(2):
-            #     pin_led = 1
-            #     time.sleep_ms(100)
-            #     pin_led = 0
-            #     time.sleep_ms(100)
 
-            # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
-            # light_state = r.json()["state"]["on"]
-            # r.close()
-            # print('   light state was %s...' % light_state)
-            # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":%s}' % str(not light_state).lower())
-            # print('   ... switching to %s' % (not light_state))
-            # r.close()
-            
+
+
+# to automate getting the hue bridge IP:
+# def get_ip_address(self, set_result=False):
+
+#     """ Get the bridge ip address from the meethue.com nupnp api """
+
+#     connection = httplib.HTTPSConnection('www.meethue.com')
+#     connection.request('GET', '/api/nupnp')
+
+#     logger.info('Connecting to meethue.com/api/nupnp')
+
+#     result = connection.getresponse()
