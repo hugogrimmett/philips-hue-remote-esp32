@@ -15,38 +15,22 @@ def main():
     print('Connected to bridge!')
 
     pin_led = machine.Pin(2, machine.Pin.OUT)
-    pin_switch = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button1 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button2 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button3 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button4 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button5 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button6 = machine.Pin(33, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button1 = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button2 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button3 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button4 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button5 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    pin_button6 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
     room = 'office'
     group_id = 1
-    scene_button1 = 'aoYhBTLiGLJYEYy'
-    scene_button2 = 'fFTqOx3xZFwSjvu'
-    scene_button3 = 'A6SMSLSLbYPL0pj'
-    scene_button4 = '9nmL2oMZ0MWEstw'
-    scene_button5 = 'sK2PYzdtkWIzklc'
-    scene_button6 = 'jW--LK2MtUzKJ-B'
-
     scenes = ['aoYhBTLiGLJYEYy', 'fFTqOx3xZFwSjvu', 'A6SMSLSLbYPL0pj', '9nmL2oMZ0MWEstw', 'sK2PYzdtkWIzklc', 'jW--LK2MtUzKJ-B']
-    # button_to_scene = {}
-    # for k in range(6):
-    #     button_to_scene[k] = 
-    
     # call: aoYhBTLiGLJYEYy
     # solo work - daytime: fFTqOx3xZFwSjvu 
     # night: A6SMSLSLbYPL0pj
     # movie: 9nmL2oMZ0MWEstw
     # techno: sK2PYzdtkWIzklc
     # reading: jW--LK2MtUzKJ-B
-
-    # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
-    # light_state = r.json()["state"]["on"]
-    # r.close()
 
     print('Scanning for button presses...')
     while True:
@@ -137,6 +121,7 @@ def get_new_credentials(device_name, hue_bridge_ip_address):
     return credentials
 
 def test_credentials(hue_bridge_ip_address, credentials):
+    # THIS FUNCTION IS BROKEN - DO NOT USE AS IS
     print(hue_bridge_ip_address)
     print(credentials)
     print('http://' + hue_bridge_ip_address + '/api/'+ credentials)
