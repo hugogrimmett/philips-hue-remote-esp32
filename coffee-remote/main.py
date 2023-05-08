@@ -6,6 +6,24 @@ import urequests
 import os
 import sys
 
+    # "13": {
+    #     "name": "Coffee machine",
+    #     "lights": [
+    #         "41"
+    #     ],
+    #     "sensors": [],
+    #     "type": "Zone",
+    #     "state": {
+    #         "all_on": false,
+    #         "any_on": false
+    #     },
+    #     "recycle": false,
+    #     "class": "Garage",
+    #     "action": {
+    #         "on": false,
+    #         "alert": "select"
+    #     }
+
 def main():
     saved_info_file_name = 'hue_ip_credentials.txt'
     light_index = 1
@@ -16,23 +34,12 @@ def main():
         sys.exit()
     print('Connected to bridge!')
 
-    pin_led = machine.Pin(2, machine.Pin.OUT)
+    # pin_led1 = machine.Pin(1, machine.Pin.OUT)
+    # pin_led2 = machine.Pin(2, machine.Pin.OUT)
     pin_button1 = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    # pin_button2 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    # pin_button3 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    # pin_button4 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    # pin_button5 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    # pin_button6 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
-    # room = 'office'
-    group_id = 1
-    scenes = ['aoYhBTLiGLJYEYy', 'fFTqOx3xZFwSjvu', 'A6SMSLSLbYPL0pj', '9nmL2oMZ0MWEstw', 'sK2PYzdtkWIzklc', 'jW--LK2MtUzKJ-B']
-    # call: aoYhBTLiGLJYEYy
-    # solo work - daytime: fFTqOx3xZFwSjvu 
-    # night: A6SMSLSLbYPL0pj
-    # movie: 9nmL2oMZ0MWEstw
-    # techno: sK2PYzdtkWIzklc
-    # reading: jW--LK2MtUzKJ-B
+    # room = 'Coffee machine'
+    group_id = 13
 
     print('Scanning for button presses...')
     while True:
@@ -42,28 +49,35 @@ def main():
         first = pin_button1.value()
         time.sleep_ms(10)
         second = pin_button1.value()
-            if second and not first:
-                print('Button pressed!')
-            elif first and not second:
-                print('Button released!') 
-                activate_scene(hue_bridge_ip_address, credentials, group_id, scenes[button_id])
-                # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
-                # light_state = r.json()["state"]["on"]
-                # r.close()
-                # print('   light state was %s...' % light_state)
-                # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index) + '/state','{"on":%s}' % str(not light_state).lower())
-                # print('   ... switching to %s' % (not light_state))
-                # r.close()
+        if second and not first:
+            print('Button pressed!')
+        elif first and not second:
+            print('Button released!') 
+            current_state = get_group_state(hue_bridge_ip_address, credentials, group_id)
+            print('Group ' + group_id + 'state currently set to ' + current_state)
+            change_group_state(hue_bridge_ip_address, credentials, group_id, not current_state)
+            print('Changed to ' + str(not current_state))
+
 
 def activate_scene(hue_bridge_ip_address, credentials, group_id, scene_id, transition_time=4):
     # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"scene":"' + scene_id + '", "transitiontime": "' + str(transition_time) + '"}')
     r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"scene":"' + scene_id + '"}')
-    # return self.request('PUT', '/api/' + self.username + '/groups/' +
-    #                     str(group_id) + '/action',
-    #                     {
-    #                         "scene": scene_id,
-    #                         "transitiontime": transition_time
-    #                     })
+    r.close()
+
+def change_group_state(hue_bridge_ip_address, credentials, group_id, new_state):
+    r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"on":"' + str(new_state) + '"}')
+    r.close()
+
+def get_group_state(hue_bridge_ip_address, credentials, group_id):
+    r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id))
+    # try:
+    state_any_on = r.json()['state']['any_on']
+    # except TypeError:
+    #     print('ERROR: could not parse Hue bridge response')
+    #     r.close()
+    #     return False
+    r.close()
+    return state_any_on
 
 def get_ip_device_credentials(saved_info_file_name):
     dir_contents = os.listdir()

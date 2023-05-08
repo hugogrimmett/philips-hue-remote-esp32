@@ -34,7 +34,7 @@ Using esptool.py from github repo (apparently can also use pip to install, but d
 Used tutorial from
 https://dev.to/tomoyk/esp32-setup-guide-with-macos-m1-mac-2j1c
 
-Discover ESP32 with ```esptool.py flash_id```
+Discover ESP32 with ```python3 esptool.py flash_id```
 
 ~/code/thirdparty/esptool git:master > ```python3 esptool.py --chip esp32 --port /dev/cu.usbserial-0001 erase_flash```
 
