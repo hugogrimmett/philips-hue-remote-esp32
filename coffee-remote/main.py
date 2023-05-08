@@ -33,8 +33,7 @@ def main():
         sys.exit()
     print('Connected to bridge!')
 
-    # pin_led1 = machine.Pin(1, machine.Pin.OUT)
-    # pin_led2 = machine.Pin(2, machine.Pin.OUT)
+    pin_led = machine.Pin(12, machine.Pin.OUT)
     pin_button1 = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
     # room = 'Coffee machine'
@@ -52,10 +51,15 @@ def main():
             print('Button pressed!')
         elif first and not second:
             print('Button released!') 
-            current_state = get_group_state(hue_bridge_ip_address, credentials, group_id)
-            print('Group ' + str(group_id) + ' state currently set to ' + str(current_state))
-            change_group_state(hue_bridge_ip_address, credentials, group_id, not current_state)
-            print('   ...changed to ' + str(not current_state))
+            previous_state = get_group_state(hue_bridge_ip_address, credentials, group_id)
+            print('Group ' + str(group_id) + ' state was set to ' + str(previous_state))
+            new_state = not previous_state
+            change_group_state(hue_bridge_ip_address, credentials, group_id, new_state)
+            print('   ...changed to ' + str(new_state))
+            if new_state == True:
+                pin_led.on()
+            else: 
+                pin_led.off()
 
 
 def activate_scene(hue_bridge_ip_address, credentials, group_id, scene_id, transition_time=4):
