@@ -85,6 +85,12 @@ ampy website: https://www.digikey.com/en/maker/projects/micropython-basics-load-
 I've been using this to copy files across to esp32
 ```ampy --port /dev/cu.usbserial-0001 --baud 115200 put main.py```
 
+If ampy stops working because main.py is running, connect with screen
+```
+import os
+os.remove('main.py')
+```
+
 ## 7. Phue
 https://github.com/studioimaginaire/phue/
 
@@ -121,5 +127,9 @@ r.json()["state"]["on"]
 ```
 
 
-Hue API reference: https://developers.meethue.com/develop/hue-api-v2/api-reference/
+## 10. Hue API
+Reference: https://developers.meethue.com/develop/hue-api-v2/api-reference/
 
+Website for talking to the bridge (v1): ```https://192.168.178.96/debug/clip.html```
+
+POST /api   {"devicetype":"test"}

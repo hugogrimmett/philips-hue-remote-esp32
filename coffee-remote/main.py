@@ -26,7 +26,6 @@ import sys
 
 def main():
     saved_info_file_name = 'hue_ip_credentials.txt'
-    light_index = 1
     try:
         hue_bridge_ip_address, device_name, credentials = get_ip_device_credentials(saved_info_file_name)
     except Exception:
@@ -54,9 +53,9 @@ def main():
         elif first and not second:
             print('Button released!') 
             current_state = get_group_state(hue_bridge_ip_address, credentials, group_id)
-            print('Group ' + group_id + 'state currently set to ' + current_state)
+            print('Group ' + str(group_id) + ' state currently set to ' + str(current_state))
             change_group_state(hue_bridge_ip_address, credentials, group_id, not current_state)
-            print('Changed to ' + str(not current_state))
+            print('   ...changed to ' + str(not current_state))
 
 
 def activate_scene(hue_bridge_ip_address, credentials, group_id, scene_id, transition_time=4):
@@ -65,7 +64,8 @@ def activate_scene(hue_bridge_ip_address, credentials, group_id, scene_id, trans
     r.close()
 
 def change_group_state(hue_bridge_ip_address, credentials, group_id, new_state):
-    r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"on":"' + str(new_state) + '"}')
+    r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"on": ' + str(new_state).lower() + '}')
+    # print(r.text)
     r.close()
 
 def get_group_state(hue_bridge_ip_address, credentials, group_id):

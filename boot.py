@@ -77,7 +77,7 @@ if not is_connected:
 #     time.sleep_ms(100)
 
 
-# import webrepl
-# webrepl.start()
+import webrepl
+webrepl.start()
 
 
