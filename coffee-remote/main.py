@@ -1,3 +1,5 @@
+# This is the main.py for the coffee machine remote control
+
 import machine
 import time
 import urequests
@@ -16,13 +18,13 @@ def main():
 
     pin_led = machine.Pin(2, machine.Pin.OUT)
     pin_button1 = machine.Pin(13, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button2 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button3 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button4 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button5 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
-    pin_button6 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    # pin_button2 = machine.Pin(12, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    # pin_button3 = machine.Pin(14, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    # pin_button4 = machine.Pin(27, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    # pin_button5 = machine.Pin(26, machine.Pin.IN, machine.Pin.PULL_DOWN)
+    # pin_button6 = machine.Pin(25, machine.Pin.IN, machine.Pin.PULL_DOWN)
 
-    room = 'office'
+    # room = 'office'
     group_id = 1
     scenes = ['aoYhBTLiGLJYEYy', 'fFTqOx3xZFwSjvu', 'A6SMSLSLbYPL0pj', '9nmL2oMZ0MWEstw', 'sK2PYzdtkWIzklc', 'jW--LK2MtUzKJ-B']
     # call: aoYhBTLiGLJYEYy
@@ -37,17 +39,14 @@ def main():
         # first = pin_switch.value()
         # time.sleep_ms(10)
         # second = pin_switch.value()
-        first_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
+        first = pin_button1.value()
         time.sleep_ms(10)
-        second_values = (pin_button1.value(), pin_button2.value(), pin_button3.value(), pin_button4.value(), pin_button5.value(), pin_button6.value())
-        button_id = 0;
-        for first, second in zip(first_values, second_values):
+        second = pin_button1.value()
             if second and not first:
-                print('Button ' + str(button_id) + ' pressed!')
+                print('Button pressed!')
             elif first and not second:
-                print('Button ' + str(button_id) + ' released!') 
+                print('Button released!') 
                 activate_scene(hue_bridge_ip_address, credentials, group_id, scenes[button_id])
-            button_id += 1
                 # r = urequests.request('GET','http://' + hue_bridge_ip_address + '/api/' + credentials + '/lights/' + str(light_index))
                 # light_state = r.json()["state"]["on"]
                 # r.close()
