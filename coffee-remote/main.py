@@ -1,28 +1,34 @@
-# This is the main.py for the coffee machine remote control
+# This is the main.py for the coffee machine remote control. 
+# There is a button that toggles the state of the coffee machine. 
+# And there is an LED that shows the current status of the coffee machine.
+#
+# Hugo Grimmett May 2023
+
+# The coffee machine group on my Hue Bridge:
+# "13": {
+#     "name": "Coffee machine",
+#     "lights": [
+#         "41"
+#     ],
+#     "sensors": [],
+#     "type": "Zone",
+#     "state": {
+#         "all_on": false,
+#         "any_on": false
+#     },
+#     "recycle": false,
+#     "class": "Garage",
+#     "action": {
+#         "on": false,
+#         "alert": "select"
+#     }
 
 import machine
 import time
 import urequests
 import os
 import sys
-
-    # "13": {
-    #     "name": "Coffee machine",
-    #     "lights": [
-    #         "41"
-    #     ],
-    #     "sensors": [],
-    #     "type": "Zone",
-    #     "state": {
-    #         "all_on": false,
-    #         "any_on": false
-    #     },
-    #     "recycle": false,
-    #     "class": "Garage",
-    #     "action": {
-    #         "on": false,
-    #         "alert": "select"
-    #     }
+import _thread
 
 def main():
     saved_info_file_name = 'hue_ip_credentials.txt'
@@ -39,6 +45,8 @@ def main():
     # room = 'Coffee machine'
     group_id = 13
 
+    print('Setting up thread for LED to reflect coffee machine state')
+    _thread.start_new_thread(match_pin_to_group_state_thread,(hue_bridge_ip_address, credentials, group_id, pin_led))
     print('Scanning for button presses...')
     while True:
         # first = pin_switch.value()
@@ -56,11 +64,19 @@ def main():
             new_state = not previous_state
             change_group_state(hue_bridge_ip_address, credentials, group_id, new_state)
             print('   ...changed to ' + str(new_state))
-            if new_state == True:
-                pin_led.on()
-            else: 
-                pin_led.off()
+            set_pin_state(pin_led, new_state)
 
+def match_pin_to_group_state_thread(hue_bridge_ip_address, credentials, group_id, pin):
+    while True:
+        state = get_group_state(hue_bridge_ip_address, credentials, group_id)
+        set_pin_state(pin, state)
+        time.sleep_ms(1000)
+
+def set_pin_state(pin, state):
+    if state == True:
+        pin.on()
+    else:
+        pin.off()
 
 def activate_scene(hue_bridge_ip_address, credentials, group_id, scene_id, transition_time=4):
     # r = urequests.request('PUT','http://' + hue_bridge_ip_address + '/api/' + credentials + '/groups/' + str(group_id) + '/action','{"scene":"' + scene_id + '", "transitiontime": "' + str(transition_time) + '"}')
